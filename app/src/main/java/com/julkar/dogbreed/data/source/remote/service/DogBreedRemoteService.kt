@@ -12,10 +12,5 @@ interface DogBreedRemoteService {
     suspend fun getAllDogBreeds(): DogBreedResponse
 }
 
-var retrofit = Retrofit.Builder()
-    .addConverterFactory(GsonConverterFactory.create())
-    .baseUrl("https://dog.ceo/api/")
-    .build()
-
 
 
