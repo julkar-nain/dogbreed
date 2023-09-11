@@ -9,7 +9,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface AppModule {
+object AppModule {
+
+    private const val BASE_URL = "https://dog.ceo/api/"
 
     @Provides
     fun provideRetrofit(): Retrofit {
@@ -19,5 +21,3 @@ interface AppModule {
             .build()
     }
 }
-
-private const val BASE_URL = "https://dog.ceo/api/"

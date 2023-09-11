@@ -1,5 +1,6 @@
 package com.julkar.dogbreed.data.source.remote.response
 
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 import com.julkar.dogbreed.data.model.DogBreed
@@ -14,12 +15,12 @@ data class DogBreedResponse(
 fun DogBreedResponse.toModel(): List<DogBreed> {
     return buildList {
         message.entrySet().forEach { json ->
-            add(DogBreed(name = json.key, subBreed = json.value.asJsonObject.toSubBreeds()))
+            add(DogBreed(name = json.key, subBreed = json.value.toSubBreeds()))
         }
     }
 }
 
-private fun JsonObject.toSubBreeds(): List<DogBreed> {
+private fun JsonElement.toSubBreeds(): List<DogBreed> {
     return if (isJsonNull) {
         emptyList()
     } else {
