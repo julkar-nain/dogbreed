@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.julkar.dogbreed.ui.theme.DogBreedTheme
 import com.julkar.dogbreed.ui.viewmodel.DogBreedsViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.julkar.dogbreed.ui.screen.MainScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,29 +31,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting()
+                    MainScreen()
                 }
             }
         }
     }
-}
-
-@Composable
-fun Greeting(
-    viewModel: DogBreedsViewModel = viewModel()
-) {
-    val breeds by viewModel.dogBreedsUiState.collectAsState()
-
-    LazyColumn {
-        items(breeds){
-            Text(
-                text = it.name
-            )
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
 }
