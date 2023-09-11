@@ -15,25 +15,15 @@ class GetDogBreedsUseCase @Inject constructor(
         return repository
             .getAllDogBreeds()
             .map { dogBreeds ->
-                dogBreeds.flatMap { dogBreed ->
-                    dogBreed.toDomain()
-                }
+                dogBreeds.toDomain()
             }
     }
 
-    private fun DogBreedDataModel.toDomain(): List<DogBreedDomainModel> {
-        return buildList {
-            if (subBreed.isEmpty()) {
-                add(
-                    DogBreedDomainModel(
-                        name = name
-                    )
-                )
-            } else {
-                addAll(subBreed.map {
-                    DogBreedDomainModel("${it.name} $name")
-                })
-            }
+    private fun List<DogBreedDataModel>.toDomain(): List<DogBreedDomainModel> {
+        return map {
+            DogBreedDomainModel(
+                name = it.name
+            )
         }
     }
 }

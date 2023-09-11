@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-    private const val BASE_URL = "https://dog.ceo/api/"
+    const val BASE_URL = "https://dog.ceo/api/"
 
     @Provides
     fun provideRetrofit(): Retrofit {

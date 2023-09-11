@@ -15,17 +15,7 @@ data class DogBreedResponse(
 fun DogBreedResponse.toModel(): List<DogBreed> {
     return buildList {
         message.entrySet().forEach { json ->
-            add(DogBreed(name = json.key, subBreed = json.value.toSubBreeds()))
-        }
-    }
-}
-
-private fun JsonElement.toSubBreeds(): List<DogBreed> {
-    return if (isJsonNull) {
-        emptyList()
-    } else {
-        asJsonArray.map { subBreed ->
-            DogBreed(subBreed.asString, subBreed = emptyList())
+            add(DogBreed(name = json.key))
         }
     }
 }
