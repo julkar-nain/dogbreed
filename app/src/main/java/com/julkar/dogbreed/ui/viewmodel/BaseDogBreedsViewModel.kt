@@ -8,6 +8,7 @@ import com.julkar.dogbreed.domain.usecase.UpdateFavouriteBreedUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -18,9 +19,12 @@ abstract class BaseDogBreedsViewModel constructor(
 ) : ViewModel() {
 
     val dogBreedsUiState = breedsFlow
+        .map {
+            DogBreedsUiState(breeds = it)
+        }
         .stateIn(
             scope = viewModelScope,
-            initialValue = emptyList(),
+            initialValue = DogBreedsUiState(isLoading = true),
             started = SharingStarted.WhileSubscribed(5000)
         )
 
@@ -34,3 +38,8 @@ abstract class BaseDogBreedsViewModel constructor(
         }
     }
 }
+
+data class DogBreedsUiState(
+    val breeds: List<DogBreed> = emptyList(),
+    val isLoading: Boolean = false
+)

@@ -2,4 +2,5 @@
     <string name="app_name">DogBreed</string>
     <string name="home">Home</string>
     <string name="favourite">Favourite</string>
+    <string name="noting_found_to_display">Noting found to display</string>
 </resources>

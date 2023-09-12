@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -40,10 +41,10 @@ import kotlinx.coroutines.launch
 fun BreedALlItemsView(
     viewModel: BaseDogBreedsViewModel
 ) {
-    val breeds by viewModel.dogBreedsUiState.collectAsState()
+    val breedUiState by viewModel.dogBreedsUiState.collectAsState()
 
     LazyColumn {
-        items(breeds) { breed ->
+        items(breedUiState.breeds) { breed ->
             BreedItemView(breed = breed,
                 imageUrlCallBack = {
                     viewModel.requestImageUrl(breed.name)
@@ -52,6 +53,17 @@ fun BreedALlItemsView(
                 }
             )
         }
+    }
+
+    if (!breedUiState.isLoading && breedUiState.breeds.isEmpty()) {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+            textAlign = TextAlign.Center,
+            text = stringResource(R.string.noting_found_to_display),
+            fontSize = 20.sp
+        )
     }
 }
 
