@@ -1,21 +1,41 @@
 package com.julkar.dogbreed.ui.screen.breeds
 
-import android.util.Log
+import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.ImageLoader
 import coil.compose.AsyncImage
 import com.julkar.dogbreed.R
-import com.julkar.dogbreed.di.AppModule.BASE_URL
-import com.julkar.dogbreed.domain.model.DogBreed
+import com.julkar.dogbreed.data.model.DogBreed
 import com.julkar.dogbreed.ui.viewmodel.DogBreedsViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun AllBreedsScreen(viewModel: DogBreedsViewModel = hiltViewModel()) {
@@ -23,32 +43,88 @@ fun AllBreedsScreen(viewModel: DogBreedsViewModel = hiltViewModel()) {
     val breeds by viewModel.dogBreedsUiState.collectAsState()
 
     LazyColumn {
-        items(breeds){ breed ->
-            BreedItemView(breed = breed)
+        items(breeds) { breed ->
+            BreedItemView(breed = breed,
+                imageUrlCallBack = {
+                    viewModel.requestImageUrl(breed.name)
+                }, onFavoriteItemClick = {
+                    viewModel.updateFavouriteBreed(it.name, isFavourite = !it.isFavourite)
+                }
+            )
         }
     }
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun BreedItemView(breed: DogBreed) {
-    Text(
-        text = breed.name
-    )
+fun BreedItemView(
+    breed: DogBreed,
+    imageUrlCallBack: suspend () -> String,
+    onFavoriteItemClick: (DogBreed) -> Unit
+) {
+    val scope = rememberCoroutineScope()
 
-    val imageUrl = getImageUrl(breed.name)
+    val imageUrl = remember {
+        mutableStateOf("")
+    }
 
-    Log.d("Hello", imageUrl)
+    scope.launch {
+        imageUrl.value = imageUrlCallBack.invoke()
+    }
 
-    AsyncImage(
-        model = imageUrl,
-        contentDescription = breed.name,
-        placeholder = painterResource(R.drawable.ic_launcher_background)
-    )
+    Box(
+        modifier = Modifier.shadow(
+            elevation = 4.dp,
+            shape = RoundedCornerShape(2.dp)
+        ),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        AsyncImage(
+            model = imageUrl.value,
+            contentDescription = breed.name,
+            placeholder = painterResource(R.drawable.placeholder_image_24),
+            error = painterResource(R.drawable.placeholder_image_24),
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(0.dp, 256.dp)
+        )
+
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = colorResource(id = R.color.gray_transparent))
+                .padding(8.dp),
+            textAlign = TextAlign.Center,
+            color = Color.White,
+            fontSize = 20.sp,
+            text = breed.name
+        )
+
+        Image(
+            modifier = Modifier
+                .clickable {
+                    onFavoriteItemClick.invoke(breed)
+                }
+                .align(Alignment.TopEnd)
+                .padding(16.dp),
+            colorFilter = ColorFilter.tint(
+                if (breed.isFavourite) {
+                    Color.Red
+                } else {
+                    Color.White
+                }
+            ),
+            painter = painterResource(id = R.drawable.favorite_image_24),
+            contentDescription = ""
+        )
+    }
 }
 
-private fun getImageUrl(breedName: String): String {
 
-    return "https://images.dog.ceo/breeds/airedale/n02096051_8892.jpg"
-
-    return "https://dog.ceo/api/breed/${breedName.replace(" ", "")}/images"
+@Composable
+@Preview(showBackground = true)
+fun PreviewBreedItemView() {
+    val bullDogBreed = DogBreed(name = "Bull Dog", isFavourite = true)
+    BreedItemView(breed = bullDogBreed, imageUrlCallBack = { "" }, onFavoriteItemClick = {})
 }

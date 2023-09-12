@@ -15,7 +15,7 @@ data class DogBreedResponse(
 fun DogBreedResponse.toModel(): List<DogBreed> {
     return buildList {
         message.entrySet().forEach { json ->
-            add(DogBreed(name = json.key))
+            add(DogBreed(name = json.key, isFavourite = false))
         }
     }
 }
