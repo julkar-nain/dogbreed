@@ -7,7 +7,7 @@ class UpdateFavouriteBreedUseCase @Inject constructor(
     private val repository: DogBreedRepository
 ) {
 
-    operator fun invoke(breedName: String, isFavourite: Boolean) {
+    suspend operator fun invoke(breedName: String, isFavourite: Boolean) {
         repository.updateFavouriteBreed(breedName, isFavourite)
     }
 }

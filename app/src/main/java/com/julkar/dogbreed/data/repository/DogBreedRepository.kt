@@ -5,9 +5,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface DogBreedRepository {
 
-    fun getAllDogBreeds(): Flow<List<DogBreed>>
+    val dogBreedsFlow: Flow<List<DogBreed>>
 
-    fun updateFavouriteBreed(breedName: String, isFavourite: Boolean)
+    suspend fun updateFavouriteBreed(breedName: String, isFavourite: Boolean)
+
+    suspend fun requestDogBreeds()
 
     suspend fun getImageUrl(breedName: String): String
 }

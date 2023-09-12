@@ -10,7 +10,6 @@ class GetDogBreedsUseCase @Inject constructor(
 ) {
 
     operator fun invoke(): Flow<List<DogBreed>> {
-        return repository
-            .getAllDogBreeds()
+        return repository.dogBreedsFlow
     }
 }

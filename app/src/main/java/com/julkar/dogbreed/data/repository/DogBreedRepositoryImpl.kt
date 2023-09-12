@@ -1,39 +1,37 @@
 package com.julkar.dogbreed.data.repository
 
-import android.util.Log
+import com.julkar.dogbreed.data.model.DogBreed
+import com.julkar.dogbreed.data.source.local.service.DogBreedLocalDataService
 import com.julkar.dogbreed.data.source.remote.response.toModel
 import com.julkar.dogbreed.data.source.remote.service.DogBreedRemoteService
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class DogBreedRepositoryImpl @Inject constructor(
-    private val remoteService: DogBreedRemoteService
+    private val remoteService: DogBreedRemoteService,
+    private val localService: DogBreedLocalDataService,
 ) : DogBreedRepository {
 
     private val imageCache = mutableMapOf<String, String>()
-    private val favouriteBreedsFlow = MutableStateFlow<Map<String, Boolean>>(mutableMapOf())
 
-    private val remoteBreedsFLow by lazy {
-        flow {
-            emit(
-                remoteService
-                    .getAllDogBreeds()
-                    .toModel()
-            )
+    override val dogBreedsFlow: Flow<List<DogBreed>> = localService.getAllBreeds()
+
+    override suspend fun requestDogBreeds() {
+        val existingDataMap = dogBreedsFlow.first().associate {
+            it.name to it.isFavourite
         }
-    }
 
-    override fun getAllDogBreeds() = remoteBreedsFLow.combine(favouriteBreedsFlow) { remoteBreeds, localBreeds ->
-        if (localBreeds.isEmpty()) {
-            remoteBreeds
-        } else {
-            remoteBreeds.map {
-                it.copy(isFavourite = localBreeds[it.name] ?: false)
+        remoteService
+            .getAllDogBreeds()
+            .toModel()
+            .forEach { remoteBreed ->
+                localService.insert(
+                    remoteBreed.copy(
+                        isFavourite = existingDataMap[remoteBreed.name] ?: false
+                    )
+                )
             }
-        }
     }
 
     override suspend fun getImageUrl(breedName: String): String {
@@ -45,12 +43,7 @@ class DogBreedRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun updateFavouriteBreed(breedName: String, isFavourite: Boolean) {
-        favouriteBreedsFlow.update { map ->
-            buildMap{
-                this[breedName] = isFavourite
-                map.forEach(this::putIfAbsent)
-            }
-        }
+    override suspend fun updateFavouriteBreed(breedName: String, isFavourite: Boolean) {
+        localService.update(DogBreed(name = breedName, isFavourite = isFavourite))
     }
 }
