@@ -2,9 +2,12 @@ package com.julkar.dogbreed.ui.screen
 
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.julkar.dogbreed.ui.navigation.Screen
@@ -24,7 +27,10 @@ fun BottomNavigationScreen(navController: NavController) {
             BottomNavigationItem(
                 selected = currentRoute == item.route,
                 label = {
-                    Text(text = item.title)
+                    Text(text = stringResource(item.title))
+                },
+                icon = {
+                    Icon(painter = painterResource(id = item.icon), contentDescription = "")
                 },
                 alwaysShowLabel = true,
                 onClick = {
@@ -37,8 +43,7 @@ fun BottomNavigationScreen(navController: NavController) {
                         launchSingleTop = true
                         restoreState = true
                     }
-                },
-                icon = { }
+                }
             )
         }
     }

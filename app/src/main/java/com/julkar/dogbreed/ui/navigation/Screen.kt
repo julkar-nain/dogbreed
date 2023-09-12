@@ -1,8 +1,24 @@
 package com.julkar.dogbreed.ui.navigation
 
-sealed class Screen(val title: String, val route: String) {
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import com.julkar.dogbreed.R
 
-    object AllBreedsScreen : Screen(title = "All Breeds", route = "AllBreedsScreen")
+sealed class Screen(
+    @StringRes val title: Int,
+    @DrawableRes val icon: Int,
+    val route: String
+) {
 
-    object FavouriteBreedsScreen : Screen(title = "Favourite Breeds", route = "FavoriteBreedScreen")
+    object AllBreedsScreen : Screen(
+        title = R.string.home,
+        icon = R.drawable.baseline_home_24,
+        route = "AllBreedsScreen"
+    )
+
+    object FavouriteBreedsScreen : Screen(
+        title = R.string.favourite,
+        icon = R.drawable.favorite_image_24,
+        route = "FavoriteBreedScreen"
+    )
 }

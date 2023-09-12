@@ -8,9 +8,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -29,7 +33,27 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.julkar.dogbreed.R
 import com.julkar.dogbreed.data.model.DogBreed
+import com.julkar.dogbreed.ui.viewmodel.BaseDogBreedsViewModel
 import kotlinx.coroutines.launch
+
+@Composable
+fun BreedALlItemsView(
+    viewModel: BaseDogBreedsViewModel
+) {
+    val breeds by viewModel.dogBreedsUiState.collectAsState()
+
+    LazyColumn {
+        items(breeds) { breed ->
+            BreedItemView(breed = breed,
+                imageUrlCallBack = {
+                    viewModel.requestImageUrl(breed.name)
+                }, onFavoriteItemClick = {
+                    viewModel.updateFavouriteBreed(it.name, isFavourite = !it.isFavourite)
+                }
+            )
+        }
+    }
+}
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
