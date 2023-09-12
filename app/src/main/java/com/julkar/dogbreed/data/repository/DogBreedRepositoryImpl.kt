@@ -43,7 +43,7 @@ class DogBreedRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateFavouriteBreed(breedName: String, isFavourite: Boolean) {
-        localService.update(DogBreed(name = breedName, isFavourite = isFavourite))
+    override suspend fun updateFavouriteBreed(dogBreed: DogBreed) {
+        localService.update(dogBreed)
     }
 }

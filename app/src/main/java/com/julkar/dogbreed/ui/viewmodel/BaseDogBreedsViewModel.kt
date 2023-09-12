@@ -29,12 +29,12 @@ abstract class BaseDogBreedsViewModel constructor(
         )
 
     suspend fun requestImageUrl(breedName: String): String {
-        return getImageUrlUseCase(breedName = breedName)
+        return getImageUrlUseCase(breedName)
     }
 
-    fun updateFavouriteBreed(breedName: String, isFavourite: Boolean) {
+    fun updateFavouriteBreed(dogBreed: DogBreed) {
         viewModelScope.launch(Dispatchers.IO) {
-            updateFavouriteBreedUseCase(breedName, isFavourite)
+            updateFavouriteBreedUseCase(dogBreed)
         }
     }
 }

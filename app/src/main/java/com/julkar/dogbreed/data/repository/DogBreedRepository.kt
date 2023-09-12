@@ -7,7 +7,7 @@ interface DogBreedRepository {
 
     val dogBreedsFlow: Flow<List<DogBreed>>
 
-    suspend fun updateFavouriteBreed(breedName: String, isFavourite: Boolean)
+    suspend fun updateFavouriteBreed(dogBreed: DogBreed)
 
     suspend fun requestDogBreeds()
 

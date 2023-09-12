@@ -1,16 +1,12 @@
 package com.julkar.dogbreed.ui.viewmodel
 
 import androidx.lifecycle.viewModelScope
-import com.julkar.dogbreed.data.model.DogBreed
 import com.julkar.dogbreed.domain.usecase.GetDogBreedsUseCase
 import com.julkar.dogbreed.domain.usecase.GetImageUrlUseCase
 import com.julkar.dogbreed.domain.usecase.RequestRemoteDogBreedsUseCase
 import com.julkar.dogbreed.domain.usecase.UpdateFavouriteBreedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,12 +19,12 @@ class AllDogBreedsViewModel @Inject constructor(
 ) : BaseDogBreedsViewModel(
     getImageUrlUseCase,
     updateFavouriteBreedUseCase,
-    getDogBreedsUseCase()
+    getDogBreedsUseCase(Unit)
 ) {
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            requestRemoteDogBreedsUseCase()
+            requestRemoteDogBreedsUseCase(Unit)
         }
     }
 }

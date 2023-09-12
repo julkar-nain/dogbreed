@@ -49,7 +49,7 @@ fun BreedALlItemsView(
                 imageUrlCallBack = {
                     viewModel.requestImageUrl(breed.name)
                 }, onFavoriteItemClick = {
-                    viewModel.updateFavouriteBreed(it.name, isFavourite = !it.isFavourite)
+                    viewModel.updateFavouriteBreed(it.copy(isFavourite = !it.isFavourite))
                 }
             )
         }
