@@ -15,6 +15,7 @@ It provides the following features :
 - Jetpack compose
 - Coroutine
 - Room
+- Unit tests
 
 ## App Screenshot
 
