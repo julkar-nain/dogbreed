@@ -10,6 +10,8 @@ const val TEST_IMAGE_URL = "https://images.dog.ceo/breeds/mastiff-bull/n02108422
 
 val testDogBreed = DogBreed(name = TEST_DOG_BREED_NAME, isFavourite = false)
 val testDogBreeds = listOf(testDogBreed)
+val testFavouriteDogBreed = testDogBreed.copy(isFavourite = true)
+val testFavouriteDogBreeds = listOf(testDogBreed, testFavouriteDogBreed)
 val testImageResponse = ImageResponse(url = TEST_IMAGE_URL, status = "success")
 val testDogBreedResponse = DogBreedResponse(
     message = JsonObject().apply {
