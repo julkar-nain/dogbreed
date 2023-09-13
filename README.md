@@ -6,7 +6,7 @@ This is a demo application. It shows list of dog breeds with image.
 It provides the following features :
 
 - User can see all dog breeds with image
-- User can create favourite dog breeds
+- User can manage favourite dog breeds list
 
 ## Used Technology
 - Kotlin
