@@ -12,6 +12,7 @@ It provides the following features :
 - Kotlin
 - MVVM with clean architecture
 - Hilt
+- Retrofit 2
 - Jetpack compose
 - Coroutine
 - Room
